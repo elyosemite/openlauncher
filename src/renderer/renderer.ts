@@ -100,6 +100,17 @@ function escapeHtml(str: string): string {
 
 // ── Render ────────────────────────────────────────────────────────────────────
 
+// Updates only the .selected class — never rebuilds HTML (icons stay intact)
+function updateSelection() {
+  const list = document.getElementById("results-list")!;
+  list.querySelectorAll<HTMLLIElement>(".result-item").forEach((el) => {
+    el.classList.toggle("selected", Number(el.dataset["index"]) === selectedIndex);
+  });
+  list.querySelector<HTMLLIElement>(".result-item.selected")
+    ?.scrollIntoView({ block: "nearest" });
+}
+
+// Full rebuild — only called when the results array changes
 function renderResults() {
   const list = document.getElementById("results-list")!;
 
@@ -108,76 +119,68 @@ function renderResults() {
     return;
   }
 
-  // Group by category
+  const categoryOrder = ["app", "web", "action", "file"];
   const groups = new Map<string, LaunchItem[]>();
   for (const item of results) {
     if (!groups.has(item.category)) groups.set(item.category, []);
     groups.get(item.category)!.push(item);
   }
+  const sortedGroups = [...groups.entries()].sort(
+    ([a], [b]) => categoryOrder.indexOf(a) - categoryOrder.indexOf(b)
+  );
 
   let html = "";
-  let globalIndex = 0;
-
-  const categoryOrder = ["app", "web", "action", "file"];
-  const sortedGroups = [...groups.entries()].sort(([a], [b]) => {
-    return categoryOrder.indexOf(a) - categoryOrder.indexOf(b);
-  });
-
+  let idx = 0;
   for (const [category, items] of sortedGroups) {
-    // Only show section headers if more than one category
     if (sortedGroups.length > 1) {
       html += `<li class="section-sep">${escapeHtml(CATEGORY_LABELS[category] ?? category)}</li>`;
     }
-
     for (const item of items) {
-      const idx = globalIndex++;
       const isSelected = idx === selectedIndex;
-      const fallbackIcon = CATEGORY_ICONS[item.category] ?? "○";
+      const fallback = CATEGORY_ICONS[item.category] ?? "○";
       html += `
         <li class="result-item${isSelected ? " selected" : ""}" data-index="${idx}" data-action="${escapeHtml(item.action)}">
-          <div class="result-icon cat-${escapeHtml(item.category)}" data-icon-idx="${idx}">${fallbackIcon}</div>
+          <div class="result-icon cat-${escapeHtml(item.category)}" data-icon-idx="${idx}">${fallback}</div>
           <div class="result-text">
             <span class="result-label">${escapeHtml(item.label)}</span>
             ${item.subtitle ? `<span class="result-subtitle">${escapeHtml(item.subtitle)}</span>` : ""}
           </div>
         </li>`;
+      idx++;
     }
   }
 
   list.innerHTML = html;
 
-  // Load real icons progressively for app and file items
-  let flatIndex = 0;
+  // Load real icons progressively — swaps glyph for <img> without re-render
+  let iconIdx = 0;
   for (const [, items] of sortedGroups) {
     for (const item of items) {
-      const idx = flatIndex++;
+      const i = iconIdx++;
       if (item.category !== "app" && item.category !== "file") continue;
       const filePath = item.action.replace(/^(open:|exec:)/, "");
       window.launcher.getIcon(filePath).then((dataUrl) => {
         if (!dataUrl) return;
-        const iconEl = list.querySelector<HTMLDivElement>(`[data-icon-idx="${idx}"]`);
-        if (!iconEl) return;
-        iconEl.innerHTML = `<img src="${dataUrl}" width="22" height="22" alt="" aria-hidden="true" style="object-fit:contain;border-radius:4px;">`;
+        const el = list.querySelector<HTMLDivElement>(`[data-icon-idx="${i}"]`);
+        if (el) el.innerHTML = `<img src="${dataUrl}" width="22" height="22" alt="" aria-hidden="true" style="object-fit:contain;border-radius:4px;">`;
       });
     }
   }
 
-  // Attach mouse events
+  // Mouse events — use updateSelection instead of renderResults
   list.querySelectorAll<HTMLLIElement>(".result-item").forEach((el) => {
     el.addEventListener("mouseenter", () => {
       selectedIndex = Number(el.dataset["index"]);
-      renderResults();
+      updateSelection();
     });
-
     el.addEventListener("click", () => {
       selectedIndex = Number(el.dataset["index"]);
       executeSelected();
     });
   });
 
-  // Scroll selected item into view
-  const selectedEl = list.querySelector<HTMLLIElement>(".result-item.selected");
-  selectedEl?.scrollIntoView({ block: "nearest" });
+  list.querySelector<HTMLLIElement>(".result-item.selected")
+    ?.scrollIntoView({ block: "nearest" });
 }
 
 // ── Search ────────────────────────────────────────────────────────────────────
@@ -208,13 +211,13 @@ document.addEventListener("keydown", (e) => {
     case "ArrowDown":
       e.preventDefault();
       selectedIndex = Math.min(selectedIndex + 1, results.length - 1);
-      renderResults();
+      updateSelection();
       break;
 
     case "ArrowUp":
       e.preventDefault();
       selectedIndex = Math.max(selectedIndex - 1, 0);
-      renderResults();
+      updateSelection();
       break;
 
     case "Tab":
@@ -224,7 +227,7 @@ document.addEventListener("keydown", (e) => {
       } else {
         selectedIndex = Math.min(selectedIndex + 1, results.length - 1);
       }
-      renderResults();
+      updateSelection();
       break;
 
     case "Enter":
