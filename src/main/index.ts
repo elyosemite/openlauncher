@@ -10,6 +10,7 @@ import { spawn } from "child_process";
 import * as fs from "fs";
 import * as path from "path";
 import * as os from "os";
+import MiniSearch from "minisearch";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -165,29 +166,25 @@ async function discoverApps(): Promise<LaunchItem[]> {
   return items;
 }
 
-// ── Fuzzy search ─────────────────────────────────────────────────────────────
+// ── Search index ──────────────────────────────────────────────────────────────
 
-function fuzzyScore(query: string, target: string): number {
-  const q = query.toLowerCase();
-  const t = target.toLowerCase();
+const miniSearch = new MiniSearch<LaunchItem>({
+  idField: "id",
+  fields: ["label", "subtitle"],
+  storeFields: ["id", "label", "subtitle", "category", "action", "icon"],
+  searchOptions: {
+    prefix: true,
+    fuzzy: 0.2,
+    boost: { label: 2 },
+  },
+});
 
-  if (t === q) return 100;
-  if (t.startsWith(q)) return 80;
-  if (t.includes(q)) return 60;
-
-  // subsequence check
-  let qi = 0;
-  for (let ti = 0; ti < t.length && qi < q.length; ti++) {
-    if (t[ti] === q[qi]) qi++;
-  }
-  if (qi === q.length) {
-    return 20 + Math.floor((q.length / t.length) * 20);
-  }
-
-  return 0;
+function buildIndex(items: LaunchItem[]) {
+  if (miniSearch.documentCount > 0) miniSearch.removeAll();
+  miniSearch.addAll(items);
 }
 
-function search(query: string, allItems: LaunchItem[]): LaunchItem[] {
+function search(query: string): LaunchItem[] {
   const trimmed = query.trim();
 
   if (trimmed.startsWith("? ") || trimmed.startsWith("search ")) {
@@ -199,28 +196,14 @@ function search(query: string, allItems: LaunchItem[]): LaunchItem[] {
       category: "web",
       action: `url:https://www.google.com/search?q=${encodeURIComponent(q)}`,
     };
-    const rest = search(q, allItems).slice(0, 9);
-    return [webItem, ...rest];
+    return [webItem, ...search(q).slice(0, 9)];
   }
 
   if (!trimmed) {
     return allItems.slice(0, 10);
   }
 
-  const scored = allItems
-    .map((item) => {
-      const labelScore = fuzzyScore(trimmed, item.label);
-      const subtitleScore = item.subtitle
-        ? fuzzyScore(trimmed, item.subtitle) * 0.5
-        : 0;
-      return { item, score: Math.max(labelScore, subtitleScore) };
-    })
-    .filter((x) => x.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 10)
-    .map((x) => x.item);
-
-  return scored;
+  return miniSearch.search(trimmed).slice(0, 10) as unknown as LaunchItem[];
 }
 
 // ── Action execution ─────────────────────────────────────────────────────────
@@ -361,7 +344,7 @@ function toggleWindow() {
 // ── IPC handlers ─────────────────────────────────────────────────────────────
 
 ipcMain.handle("launcher:search", (_event, query: string) => {
-  return search(query, allItems);
+  return search(query);
 });
 
 ipcMain.handle("launcher:execute", async (_event, action: string) => {
@@ -378,6 +361,7 @@ ipcMain.handle("launcher:hide", () => {
 app.whenReady().then(async () => {
   const discovered = await discoverApps();
   allItems = [...BUILT_IN, ...discovered];
+  buildIndex(allItems);
 
   createWindow();
 
