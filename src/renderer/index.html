@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
@@ -15,36 +15,68 @@
   <body>
     <div id="app">
       <div class="palette">
-        <div class="drag-handle">
-          <span class="drag-dots" aria-hidden="true"></span>
+
+        <div class="drag-handle" aria-hidden="true">
+          <span class="drag-grip"></span>
         </div>
 
-        <div class="search-bar">
-          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <div class="search-bar" role="search">
+          <svg
+            class="search-icon"
+            width="16" height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
+
           <input
             id="search-input"
-            type="text"
-            placeholder="Search apps, files, or type ? to search the web…"
+            type="search"
+            placeholder="Search apps, files, or ? for web…"
             autocomplete="off"
             spellcheck="false"
+            aria-label="Search"
+            aria-autocomplete="list"
+            aria-controls="results-list"
           />
-          <kbd class="esc-hint">esc</kbd>
-          <button id="theme-toggle" title="Toggle light/dark mode" aria-label="Toggle theme">
+
+          <kbd class="esc-hint" aria-hidden="true">esc</kbd>
+
+          <button
+            id="theme-toggle"
+            aria-label="Toggle light/dark mode"
+          >
             <!-- icon injected by renderer.ts -->
           </button>
         </div>
 
-        <ul id="results-list"></ul>
+        <ul
+          id="results-list"
+          role="listbox"
+          aria-label="Search results"
+          aria-live="polite"
+        ></ul>
 
-        <div class="footer">
-          <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
-          <span><kbd>↵</kbd> open</span>
-          <span><kbd>⌘</kbd><kbd>Space</kbd> toggle</span>
-          <span class="footer-tip">tip: <code>? query</code> for web search</span>
-        </div>
+        <footer class="footer" aria-label="Keyboard shortcuts">
+          <span aria-label="Arrow keys to navigate">
+            <kbd aria-hidden="true">↑</kbd><kbd aria-hidden="true">↓</kbd> navigate
+          </span>
+          <span aria-label="Enter to open">
+            <kbd aria-hidden="true">↵</kbd> open
+          </span>
+          <span class="footer-tip">
+            tip: <code>? query</code> for web search
+          </span>
+        </footer>
+
       </div>
     </div>
 
