@@ -19,7 +19,7 @@ Open anything — apps, URLs, system actions — with an upcoming AI-powered sem
 <br/>
 
 <div align="center">
-  <video src="./assets/video.mp4" width="800" controls muted autoplay loop></video>
+  <img src="./assets/demo.webp" width="800" alt="OpenLauncher Demonstration" />
 </div>
 
 <br/>
