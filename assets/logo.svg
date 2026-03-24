@@ -1,24 +1,25 @@
 <svg width="800" height="200" viewBox="0 0 800 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="800" height="200" rx="20" fill="#1A1B26"/>
-  <!-- Symbol/Prompt Icon -->
-  <path d="M40 60L80 100L40 140" stroke="url(#paint0_linear)" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
-  <rect x="90" y="130" width="40" height="10" rx="5" fill="url(#paint1_linear)"/>
+  <rect width="800" height="200" rx="24" fill="#1A1B26"/>
   
-  <!-- "OpenLauncher" Text using a monospace look -->
-  <text x="160" y="115" fill="white" font-family="'JetBrains Mono', 'Fira Code', monospace" font-size="72" font-weight="bold" letter-spacing="-2">
+  <!-- Geometric Hexagon Icon ⬡ -->
+  <path d="M100 60L134.641 80V120L100 140L65.359 120V80L100 60Z" stroke="url(#paint0_linear)" stroke-width="12" stroke-linejoin="round"/>
+  <path d="M100 85L112.99 92.5V107.5L100 115L87.0096 107.5V92.5L100 85Z" fill="url(#paint1_linear)" opacity="0.6"/>
+  
+  <!-- OpenLauncher Text -->
+  <text x="180" y="122" fill="white" font-family="'JetBrains Mono', 'Fira Code', monospace" font-size="82" font-weight="800" letter-spacing="-3">
     Open<tspan fill="url(#paint0_linear)">Launcher</tspan>
   </text>
   
-  <!-- Subtle decorative elements -->
-  <path d="M720 50L740 30" stroke="#7AA2F7" stroke-width="8" stroke-linecap="round" opacity="0.4"/>
-  <circle cx="760" cy="150" r="10" fill="#BB9AF7" opacity="0.3"/>
+  <!-- Decorative code-like elements -->
+  <rect x="720" y="40" width="40" height="6" rx="3" fill="#7AA2F7" opacity="0.2"/>
+  <rect x="700" y="55" width="60" height="6" rx="3" fill="#BB9AF7" opacity="0.2"/>
   
   <defs>
-    <linearGradient id="paint0_linear" x1="40" y1="60" x2="80" y2="140" gradientUnits="userSpaceOnUse">
+    <linearGradient id="paint0_linear" x1="65" y1="60" x2="135" y2="140" gradientUnits="userSpaceOnUse">
       <stop stop-color="#7AA2F7"/>
       <stop offset="1" stop-color="#BB9AF7"/>
     </linearGradient>
-    <linearGradient id="paint1_linear" x1="90" y1="130" x2="130" y2="130" gradientUnits="userSpaceOnUse">
+    <linearGradient id="paint1_linear" x1="87" y1="85" x2="113" y2="115" gradientUnits="userSpaceOnUse">
       <stop stop-color="#BB9AF7"/>
       <stop offset="1" stop-color="#FF9E64"/>
     </linearGradient>
