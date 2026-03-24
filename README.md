@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./assets/logo-banner.svg" width="600" alt="OpenLauncher Banner" />
+<img src="./assets/banner.svg" width="640" alt="OpenLauncher Banner" />
 
 <br/>
 
