@@ -18,19 +18,11 @@ Open anything — apps, URLs, system actions — with an upcoming AI-powered sem
 
 <br/>
 
-```
-╭──────────────────────────────────────────────────────────╮
-│  ⬡ OpenLauncher                                     [esc]│
-│  ·· ···················································· │
-│ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄ │
-│  ⬡  Visual Studio Code          Applications            │
-│  ⬡  Figma                                               │
-│  ◎  GitHub                       Web                    │
-│  ◎  Claude                                              │
-│  ⚡  Sleep                        Actions               │
-│  ⚡  Lock Screen                                        │
-╰──────────────────────────────────────────────────────────╯
-```
+<div align="center">
+  <video src="./assets/video.mp4" width="800" controls muted autoplay loop></video>
+</div>
+
+<br/>
 
 </div>
 
