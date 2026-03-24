@@ -2,28 +2,43 @@
   <style>
     :root {
       --text-color: #1A1B26;
-      --accent: #7AA2F7;
+      --accent-1: #7AA2F7;
+      --accent-2: #BB9AF7;
     }
     @media (prefers-color-scheme: dark) {
       :root {
         --text-color: #FFFFFF;
-        --accent: #7AA2F7;
+        --accent-1: #7AA2F7;
+        --accent-2: #BB9AF7;
       }
     }
     .text-main { fill: var(--text-color); }
-    .accent-color { fill: var(--accent); }
+    .accent-1 { fill: var(--accent-1); }
+    .accent-2 { fill: var(--accent-2); }
     .font-style { font-family: 'JetBrains Mono', 'Fira Code', monospace; font-weight: 800; font-size: 68px; letter-spacing: -3px; }
+    
+    /* Animation for the mascot blobs */
+    @keyframes morph {
+      0%, 100% { d: path('M40 50C40 22.3858 62.3858 0 90 0H150C177.614 0 200 22.3858 200 50V70C200 97.6142 177.614 120 150 120H90C62.3858 120 40 97.6142 40 70V50Z'); }
+      50% { d: path('M30 60C30 32.3858 52.3858 10 80 10H160C187.614 10 210 32.3858 210 60V80C210 107.614 187.614 130 160 130H80C52.3858 130 30 107.614 30 80V60Z'); }
+    }
+    .morphed { animation: morph 6s ease-in-out infinite; }
   </style>
 
-  <!-- Mascot: Minimalist Hummingbird -->
-  <g transform="translate(60, 110) scale(1.1)">
-    <path class="accent-color" d="M45 40C45 40 70 20 90 20C110 20 120 40 120 40L90 60L45 40Z" opacity="0.4"/>
-    <path fill="url(#gradient)" d="M10 50C10 50 40 10 70 30C100 50 130 90 130 90L70 90L10 50Z"/>
-    <path class="text-main" d="M60 45L140 25" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+  <!-- Mascot: Organic Command Palette Shape -->
+  <g transform="translate(40, 95)">
+    <!-- Base Organic Shape (The "Palette") -->
+    <path class="accent-1 morphed" opacity="0.15" d="M40 50C40 22.3858 62.3858 0 90 0H150C177.614 0 200 22.3858 200 50V70C200 97.6142 177.614 120 150 120H90C62.3858 120 40 97.6142 40 70V50Z" />
+    
+    <!-- Command Prompt Symbol (Synthesized into the shape) -->
+    <path d="M75 40L100 60L75 80" stroke="url(#gradient)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+    <rect x="110" y="75" width="35" height="8" rx="4" fill="url(#gradient)">
+      <animate attributeName="opacity" values="1;0.2;1" dur="1.5s" repeatCount="indefinite" />
+    </rect>
   </g>
 
-  <!-- Corrected Text: OpenLauncher -->
-  <text x="220" y="175" class="font-style text-main">Open<tspan fill="url(#gradient)">Launcher</tspan></text>
+  <!-- Text: OpenLauncher -->
+  <text x="260" y="175" class="font-style text-main">Open<tspan fill="url(#gradient)">Launcher</tspan></text>
 
   <defs>
     <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
