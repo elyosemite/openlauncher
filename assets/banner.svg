@@ -17,7 +17,6 @@
     .accent-2 { fill: var(--accent-2); }
     .font-style { font-family: 'JetBrains Mono', 'Fira Code', monospace; font-weight: 800; font-size: 68px; letter-spacing: -3px; }
     
-    /* Animation for the mascot blobs */
     @keyframes morph {
       0%, 100% { d: path('M40 50C40 22.3858 62.3858 0 90 0H150C177.614 0 200 22.3858 200 50V70C200 97.6142 177.614 120 150 120H90C62.3858 120 40 97.6142 40 70V50Z'); }
       50% { d: path('M30 60C30 32.3858 52.3858 10 80 10H160C187.614 10 210 32.3858 210 60V80C210 107.614 187.614 130 160 130H80C52.3858 130 30 107.614 30 80V60Z'); }
@@ -27,17 +26,14 @@
 
   <!-- Mascot: Organic Command Palette Shape -->
   <g transform="translate(40, 95)">
-    <!-- Base Organic Shape (The "Palette") -->
     <path class="accent-1 morphed" opacity="0.15" d="M40 50C40 22.3858 62.3858 0 90 0H150C177.614 0 200 22.3858 200 50V70C200 97.6142 177.614 120 150 120H90C62.3858 120 40 97.6142 40 70V50Z" />
-    
-    <!-- Command Prompt Symbol (Synthesized into the shape) -->
     <path d="M75 40L100 60L75 80" stroke="url(#gradient)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
     <rect x="110" y="75" width="35" height="8" rx="4" fill="url(#gradient)">
       <animate attributeName="opacity" values="1;0.2;1" dur="1.5s" repeatCount="indefinite" />
     </rect>
   </g>
 
-  <!-- Text: OpenLauncher -->
+  <!-- Text: OpenLauncher (Fixed Spelling) -->
   <text x="260" y="175" class="font-style text-main">Open<tspan fill="url(#gradient)">Launcher</tspan></text>
 
   <defs>
