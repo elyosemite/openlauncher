@@ -14,10 +14,11 @@ interface LaunchItem {
 declare global {
   interface Window {
     launcher: {
-      search: (query: string) => Promise<LaunchItem[]>;
-      execute: (action: string) => Promise<void>;
-      hide: () => Promise<void>;
-      onShow: (cb: () => void) => void;
+      search:  (query: string)    => Promise<LaunchItem[]>;
+      execute: (action: string)   => Promise<void>;
+      hide:    ()                 => Promise<void>;
+      getIcon: (filePath: string) => Promise<string | null>;
+      onShow:  (cb: () => void)   => void;
     };
   }
 }
@@ -131,10 +132,10 @@ function renderResults() {
     for (const item of items) {
       const idx = globalIndex++;
       const isSelected = idx === selectedIndex;
-      const icon = CATEGORY_ICONS[item.category] ?? "○";
+      const fallbackIcon = CATEGORY_ICONS[item.category] ?? "○";
       html += `
         <li class="result-item${isSelected ? " selected" : ""}" data-index="${idx}" data-action="${escapeHtml(item.action)}">
-          <div class="result-icon cat-${escapeHtml(item.category)}">${icon}</div>
+          <div class="result-icon cat-${escapeHtml(item.category)}" data-icon-idx="${idx}">${fallbackIcon}</div>
           <div class="result-text">
             <span class="result-label">${escapeHtml(item.label)}</span>
             ${item.subtitle ? `<span class="result-subtitle">${escapeHtml(item.subtitle)}</span>` : ""}
@@ -144,6 +145,22 @@ function renderResults() {
   }
 
   list.innerHTML = html;
+
+  // Load real icons progressively for app and file items
+  let flatIndex = 0;
+  for (const [, items] of sortedGroups) {
+    for (const item of items) {
+      const idx = flatIndex++;
+      if (item.category !== "app" && item.category !== "file") continue;
+      const filePath = item.action.replace(/^(open:|exec:)/, "");
+      window.launcher.getIcon(filePath).then((dataUrl) => {
+        if (!dataUrl) return;
+        const iconEl = list.querySelector<HTMLDivElement>(`[data-icon-idx="${idx}"]`);
+        if (!iconEl) return;
+        iconEl.innerHTML = `<img src="${dataUrl}" width="22" height="22" alt="" aria-hidden="true" style="object-fit:contain;border-radius:4px;">`;
+      });
+    }
+  }
 
   // Attach mouse events
   list.querySelectorAll<HTMLLIElement>(".result-item").forEach((el) => {

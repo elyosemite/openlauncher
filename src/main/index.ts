@@ -426,6 +426,22 @@ ipcMain.handle("launcher:hide", () => {
   win?.hide();
 });
 
+// ── Icon cache ────────────────────────────────────────────────────────────────
+
+const iconCache = new Map<string, string>();
+
+ipcMain.handle("launcher:get-icon", async (_event, filePath: string) => {
+  if (iconCache.has(filePath)) return iconCache.get(filePath)!;
+  try {
+    const icon = await app.getFileIcon(filePath, { size: "normal" });
+    const dataUrl = icon.toDataURL();
+    iconCache.set(filePath, dataUrl);
+    return dataUrl;
+  } catch {
+    return null;
+  }
+});
+
 // ── App lifecycle ─────────────────────────────────────────────────────────────
 
 app.whenReady().then(async () => {
