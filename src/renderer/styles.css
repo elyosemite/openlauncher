@@ -38,61 +38,61 @@
 
 /* Light */
 .light {
-  --bg:            #f5f5f7;          /* off-white — softer than pure white */
-  --border:        rgba(0, 0, 0, 0.16);
-  --text-1:        #08080b;          /* near-black — 20:1 on bg */
-  --text-2:        rgba(8, 8, 11, 0.72);  /* secondary — ~9:1 */
-  --text-3:        rgba(8, 8, 11, 0.52);  /* hints — ~5.5:1 */
+  --bg:            #f7f7f9;
+  --border:        rgba(0, 0, 0, 0.12);
+  --text-1:        #1c1c22;          /* dark gray, não preto puro */
+  --text-2:        rgba(28, 28, 34, 0.58);
+  --text-3:        rgba(28, 28, 34, 0.40);
 
-  --accent:        #3535d6;          /* deeper indigo — 5:1 on light bg */
-  --selected-bg:   rgba(53, 53, 214, 0.07);
-  --selected-bar:  #3535d6;
+  --accent:        #4848e0;
+  --selected-bg:   rgba(72, 72, 224, 0.07);
+  --selected-bar:  #4848e0;
 
-  --icon-app:      #3535d6;          /* indigo — 5:1 ✓ */
-  --icon-app-bg:   rgba(53, 53, 214, 0.10);
-  --icon-web:      #0f7a65;          /* dark teal — 5.2:1 ✓ */
-  --icon-web-bg:   rgba(15, 122, 101, 0.10);
-  --icon-action:   #962d10;          /* dark coral — 6.1:1 ✓ */
-  --icon-action-bg:rgba(150, 45, 16, 0.10);
-  --icon-file:     #7a5810;          /* dark amber — 5.4:1 ✓ */
-  --icon-file-bg:  rgba(122, 88, 16, 0.10);
+  --icon-app:      #4848e0;
+  --icon-app-bg:   rgba(72, 72, 224, 0.09);
+  --icon-web:      #178a72;
+  --icon-web-bg:   rgba(23, 138, 114, 0.09);
+  --icon-action:   #b03a1a;
+  --icon-action-bg:rgba(176, 58, 26, 0.09);
+  --icon-file:     #8c6614;
+  --icon-file-bg:  rgba(140, 102, 20, 0.09);
 
   --shadow:
     0 0 0 1px   rgba(0, 0, 0, 0.09),
     0 4px 16px  rgba(0, 0, 0, 0.07),
     0 16px 48px rgba(0, 0, 0, 0.08);
 
-  --kbd-bg:        rgba(0, 0, 0, 0.06);
-  --toggle-bg:     rgba(0, 0, 0, 0.06);
-  --toggle-hover:  rgba(0, 0, 0, 0.11);
+  --kbd-bg:        rgba(0, 0, 0, 0.05);
+  --toggle-bg:     rgba(0, 0, 0, 0.05);
+  --toggle-hover:  rgba(0, 0, 0, 0.09);
 }
 
 /* OS fallback */
 @media (prefers-color-scheme: light) {
   :root:not(.dark) {
-    --bg:            #f5f5f7;
-    --border:        rgba(0, 0, 0, 0.16);
-    --text-1:        #08080b;
-    --text-2:        rgba(8, 8, 11, 0.72);
-    --text-3:        rgba(8, 8, 11, 0.52);
-    --accent:        #3535d6;
-    --selected-bg:   rgba(53, 53, 214, 0.07);
-    --selected-bar:  #3535d6;
-    --icon-app:      #3535d6;
-    --icon-app-bg:   rgba(53, 53, 214, 0.10);
-    --icon-web:      #0f7a65;
-    --icon-web-bg:   rgba(15, 122, 101, 0.10);
-    --icon-action:   #962d10;
-    --icon-action-bg:rgba(150, 45, 16, 0.10);
-    --icon-file:     #7a5810;
-    --icon-file-bg:  rgba(122, 88, 16, 0.10);
+    --bg:            #f7f7f9;
+    --border:        rgba(0, 0, 0, 0.12);
+    --text-1:        #1c1c22;
+    --text-2:        rgba(28, 28, 34, 0.58);
+    --text-3:        rgba(28, 28, 34, 0.40);
+    --accent:        #4848e0;
+    --selected-bg:   rgba(72, 72, 224, 0.07);
+    --selected-bar:  #4848e0;
+    --icon-app:      #4848e0;
+    --icon-app-bg:   rgba(72, 72, 224, 0.09);
+    --icon-web:      #178a72;
+    --icon-web-bg:   rgba(23, 138, 114, 0.09);
+    --icon-action:   #b03a1a;
+    --icon-action-bg:rgba(176, 58, 26, 0.09);
+    --icon-file:     #8c6614;
+    --icon-file-bg:  rgba(140, 102, 20, 0.09);
     --shadow:
       0 0 0 1px   rgba(0, 0, 0, 0.09),
       0 4px 16px  rgba(0, 0, 0, 0.07),
       0 16px 48px rgba(0, 0, 0, 0.08);
-    --kbd-bg:        rgba(0, 0, 0, 0.06);
-    --toggle-bg:     rgba(0, 0, 0, 0.06);
-    --toggle-hover:  rgba(0, 0, 0, 0.11);
+    --kbd-bg:        rgba(0, 0, 0, 0.05);
+    --toggle-bg:     rgba(0, 0, 0, 0.05);
+    --toggle-hover:  rgba(0, 0, 0, 0.09);
   }
 }
 
