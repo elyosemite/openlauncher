@@ -1,5 +1,5 @@
 {
-  "name": "launcher",
+  "name": "openlauncher",
   "version": "1.0.0",
   "description": "Cross-platform Electron command palette launcher",
   "main": "dist/main/index.js",

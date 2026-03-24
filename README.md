@@ -1,11 +1,13 @@
 <div align="center">
 
+<img src="./assets/logo.svg" width="120" height="120" alt="OpenLauncher Logo" />
+
 <br/>
 
-# ⌨️ Launcher
+# ⌨️ OpenLauncher
 
 **A blazing-fast, keyboard-first command palette for your desktop.**
-Open anything — apps, URLs, system actions — without ever leaving your keyboard.
+Open anything — apps, URLs, system actions — semantically powered by AI.
 
 <br/>
 
