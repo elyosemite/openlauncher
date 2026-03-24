@@ -166,6 +166,76 @@ async function discoverApps(): Promise<LaunchItem[]> {
   return items;
 }
 
+// ── File discovery ───────────────────────────────────────────────────────────
+
+const FILE_EXTS: Record<string, string[]> = {
+  document: [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx",
+             ".txt", ".md", ".csv", ".pages", ".numbers", ".key", ".odt",
+             ".ods", ".odp", ".rtf", ".epub"],
+  image:    [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".heic",
+             ".avif", ".bmp", ".tiff", ".psd", ".raw"],
+  video:    [".mp4", ".mov", ".avi", ".mkv", ".webm", ".m4v", ".wmv",
+             ".flv", ".mpg", ".mpeg"],
+  audio:    [".mp3", ".flac", ".wav", ".aac", ".m4a", ".ogg", ".wma"],
+};
+
+const ALL_EXTS = new Set(Object.values(FILE_EXTS).flat());
+
+// candidate folder names per platform (tries each, uses first that exists)
+const USER_FOLDERS: { names: string[]; depth: number }[] = [
+  { names: ["Documents", "Documentos"],                     depth: 2 },
+  { names: ["Pictures",  "Imagens", "Images", "Fotos"],     depth: 2 },
+  { names: ["Videos",    "Vídeos",  "Movies", "Filmes"],    depth: 2 },
+  { names: ["Music",     "Músicas", "Música"],               depth: 2 },
+  { names: ["Downloads"],                                    depth: 1 },
+  { names: ["Desktop",   "Área de Trabalho"],                depth: 1 },
+];
+
+function discoverFiles(): LaunchItem[] {
+  const home = os.homedir();
+  const items: LaunchItem[] = [];
+  const seen = new Set<string>();
+
+  function scanDir(dir: string, depth: number) {
+    if (depth < 0) return;
+    let entries: fs.Dirent[];
+    try {
+      entries = fs.readdirSync(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const entry of entries) {
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory() && depth > 0) {
+        scanDir(fullPath, depth - 1);
+      } else if (entry.isFile()) {
+        const ext = path.extname(entry.name).toLowerCase();
+        if (!ALL_EXTS.has(ext) || seen.has(fullPath)) continue;
+        seen.add(fullPath);
+        items.push({
+          id:       `file-${fullPath}`,
+          label:    entry.name,
+          subtitle: fullPath,
+          category: "file",
+          action:   `open:${fullPath}`,
+        });
+      }
+    }
+  }
+
+  for (const { names, depth } of USER_FOLDERS) {
+    for (const name of names) {
+      const dir = path.join(home, name);
+      if (fs.existsSync(dir)) {
+        scanDir(dir, depth);
+        break; // stop at first match per folder type
+      }
+    }
+  }
+
+  return items;
+}
+
 // ── Search index ──────────────────────────────────────────────────────────────
 
 const miniSearch = new MiniSearch<LaunchItem>({
@@ -359,8 +429,11 @@ ipcMain.handle("launcher:hide", () => {
 // ── App lifecycle ─────────────────────────────────────────────────────────────
 
 app.whenReady().then(async () => {
-  const discovered = await discoverApps();
-  allItems = [...BUILT_IN, ...discovered];
+  const [discoveredApps, discoveredFiles] = await Promise.all([
+    discoverApps(),
+    Promise.resolve(discoverFiles()),
+  ]);
+  allItems = [...BUILT_IN, ...discoveredApps, ...discoveredFiles];
   buildIndex(allItems);
 
   createWindow();
